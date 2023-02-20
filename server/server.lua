@@ -83,6 +83,13 @@ end)
 RegisterServerEvent("fivem-appearance:server:saveAppearance", function(appearance)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+
+    print(appearance)
+    local id = GetPlayerIdentifier(src)
+    local canBuy = exports['vip-groups']:canBuyClothing(appearance, id)
+    if not canBuy then
+        return print("cant buy due to group")
+    end
     if appearance ~= nil then
         MySQL.update.await("UPDATE playerskins SET active = 0 WHERE citizenid = ?", {Player.PlayerData.citizenid}) -- Make all the skins inactive
         MySQL.Async.execute('DELETE FROM playerskins WHERE citizenid = ? AND model = ?',

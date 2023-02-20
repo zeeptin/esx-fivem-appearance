@@ -436,6 +436,16 @@ RegisterNetEvent("fivem-appearance:client:changeOutfit", function(data)
     local pedModel = exports['fivem-appearance']:getPedModel(playerPed)
     local failed = false
     local appearanceDB = nil
+    -- check if canBuy
+    print(data)
+    local canBuy = exports['vip-groups']:canBuyClothing(data)
+    if canBuy ~= true then
+        for k, v in pairs(canBuy) do
+            QBCore.Functions.Notify('You need at least ' .. v.group .. ' to buy item: ' .. v.category .. ', ID: ' .. v.id, 'error')
+        end
+        -- set back apperance
+        return
+    end
     if pedModel ~= data.model then
         QBCore.Functions.TriggerCallback("fivem-appearance:server:getAppearance", function(appearance)
             if appearance then
